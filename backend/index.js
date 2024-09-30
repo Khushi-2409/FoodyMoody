@@ -1,3 +1,5 @@
+const cors = require('cors');
+
 global.foodData = require("./db")(function call(err, data, CatData) {
   // console.log(data)
   if (err) console.log(err);
@@ -16,6 +18,11 @@ app.use((req, res, next) => {
   );
   next();
 });
+
+app.use(cors({
+  origin: 'https://foodymoody-frontend.onrender.com' 
+}));
+
 app.use(express.json());
 
 app.get("/", (req, res) => {

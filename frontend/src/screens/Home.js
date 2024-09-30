@@ -10,7 +10,7 @@ export default function Home() {
   const [search, setSearch] = useState(""); // search state
 
   const loadFoodItems = async () => {
-    let response = await fetch("http://localhost:5000/api/auth/foodData", {
+    let response = await fetch("https://your-backend-url.onrender.com/api/auth/foodData", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
