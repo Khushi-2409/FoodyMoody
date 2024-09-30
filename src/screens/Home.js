@@ -7,19 +7,16 @@ import Navbar from "../components/Navbar";
 export default function Home() {
   const [foodCat, setFoodCat] = useState([]);
   const [foodItems, setFoodItems] = useState([]);
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState(""); // search state
 
   const loadFoodItems = async () => {
     let response = await fetch("http://localhost:5000/api/auth/foodData", {
-      // credentials: 'include',
-      // Origin:"http://localhost:3000/login",
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
     });
     response = await response.json();
-    // console.log(response[1][0].CategoryName)
     setFoodItems(response[0]);
     setFoodCat(response[1]);
   };
@@ -30,17 +27,14 @@ export default function Home() {
 
   return (
     <div>
-      <div>
-        <Navbar />
-      </div>
-      <div>
-        <Carousel />
-      </div>
+      <Navbar />
+      {/* Pass setSearch as a prop */}
+      <Carousel setSearch={setSearch} />
       <div className="container">
-        {foodCat && foodCat.length > 0
+        {foodCat.length > 0
           ? foodCat.map((data) => {
               return (
-                <div className="row mb-3" key={data.id}>
+                <div className="row mb-3" key={data._id}>
                   <div className="fs-3 m-3">{data.CategoryName}</div>
                   <hr
                     id="hr-success"
@@ -50,7 +44,8 @@ export default function Home() {
                         "-webkit-linear-gradient(left,rgb(0, 255, 137),rgb(0, 0, 0))",
                     }}
                   />
-                  {foodItems && foodItems.length > 0 ? (
+                  {/* Filter food items based on the search input */}
+                  {foodItems.length > 0 ? (
                     foodItems
                       .filter(
                         (items) =>
@@ -62,7 +57,7 @@ export default function Home() {
                       .map((filterItems) => {
                         return (
                           <div
-                            key={filterItems.id}
+                            key={filterItems._id}
                             className="col-12 col-md-6 col-lg-3"
                           >
                             <Card
@@ -70,19 +65,18 @@ export default function Home() {
                               item={filterItems}
                               options={filterItems.options[0]}
                               ImgSrc={filterItems.img}
-                            ></Card>
+                            />
                           </div>
                         );
                       })
                   ) : (
-                    <div> No Such Data </div>
+                    <div>No Such Data</div>
                   )}
                 </div>
               );
             })
-          : ""}
+          : "Loading Categories..."}
       </div>
-
       <Footer />
     </div>
   );
