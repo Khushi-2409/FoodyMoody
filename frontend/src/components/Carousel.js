@@ -3,8 +3,8 @@ import Burger from "../images/Burger2.jpg";
 import Barbeque from "../images/Barbeque.jpg";
 import Pastery from "../images/Pastry.jpg";
 import "../../node_modules/bootstrap-dark-5/dist/css/bootstrap-dark.min.css";
-import "../../node_modules/bootstrap/dist/js/bootstrap.bundle";
-import "../../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js";
+import "bootstrap/dist/js/bootstrap.bundle.js";
+import "bootstrap/dist/js/bootstrap.bundle.min.js";
 
 export default function Carousel({ setSearch }) {
   const handleSearchChange = (e) => {
