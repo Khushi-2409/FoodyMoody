@@ -23,10 +23,13 @@ module.exports = async function () {
     const Catdata = await categoryCollection.find({}).toArray();
     console.log("Food Categories:", Catdata); // Log the fetched categories
 
-    return data, Catdata;
+    // Assign global variables
+    global.food_items = data;
+    global.food_cat = Catdata;
+
+    // No need to return anything if setting globals
   } catch (err) {
     console.error("Error connecting to MongoDB:", err);
     throw err; // Rethrow the error after logging
   }
 };
-

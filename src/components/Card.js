@@ -8,12 +8,11 @@ export default function Card(props) {
   const [qty, setQty] = useState(1);
   const [size, setSize] = useState("");
   const priceRef = useRef();
-  const dispatch = useDispatchCart();
 
-  // Ensure options are available and properly structured
-  let options = props.options && typeof props.options === "object" ? props.options : {};
-  let priceOptions = Object.keys(options);
+  let options = props.options || {}; // Ensure options is always an object
+  let priceOptions = Object.keys(options); // Use Object.keys only when options is valid
   let foodItem = props.item;
+  const dispatch = useDispatchCart();
 
   const handleClick = () => {
     if (!localStorage.getItem("token")) {
@@ -30,10 +29,15 @@ export default function Card(props) {
   };
 
   const handleAddToCart = async () => {
-    let food = data.find((item) => item.id === foodItem._id);
+    let food = [];
+    for (const item of data) {
+      if (item.id === foodItem._id) {
+        food = item;
+        break;
+      }
+    }
 
-    // Dispatching based on food found
-    if (food) {
+    if (food !== 0) {
       if (food.size === size) {
         await dispatch({
           type: "UPDATE",
@@ -41,7 +45,8 @@ export default function Card(props) {
           price: finalPrice,
           qty: qty,
         });
-      } else {
+        return;
+      } else if (food.size !== size) {
         await dispatch({
           type: "ADD",
           id: foodItem._id,
@@ -51,26 +56,26 @@ export default function Card(props) {
           size: size,
           img: props.ImgSrc,
         });
+        return;
       }
-    } else {
-      await dispatch({
-        type: "ADD",
-        id: foodItem._id,
-        name: foodItem.name,
-        price: finalPrice,
-        qty: qty,
-        size: size,
-        img: props.ImgSrc,
-      });
     }
+
+    await dispatch({
+      type: "ADD",
+      id: foodItem._id,
+      name: foodItem.name,
+      price: finalPrice,
+      qty: qty,
+      size: size,
+      img: props.ImgSrc,
+    });
   };
 
   useEffect(() => {
     setSize(priceRef.current.value);
-  }, [priceRef]);
+  }, []);
 
-  // Validate size and price options
-  let finalPrice = size && options[size] ? qty * parseInt(options[size], 10) : 0;
+  let finalPrice = qty * parseInt(options[size] || 0); // Handle missing size in options
 
   return (
     <div>
@@ -78,7 +83,7 @@ export default function Card(props) {
         <img
           src={props.ImgSrc}
           className="card-img-top"
-          alt={props.foodName}
+          alt="..."
           style={{ height: "120px", objectFit: "fill" }}
         />
         <div className="card-body">
@@ -88,13 +93,14 @@ export default function Card(props) {
               className="m-2 h-100 w-20 bg-success text-black rounded"
               onClick={handleClick}
               onChange={handleQty}
-              value={qty}
             >
-              {Array.from(Array(6), (e, i) => (
-                <option key={i + 1} value={i + 1}>
-                  {i + 1}
-                </option>
-              ))}
+              {Array.from(Array(6), (e, i) => {
+                return (
+                  <option key={i + 1} value={i + 1}>
+                    {i + 1}
+                  </option>
+                );
+              })}
             </select>
             <select
               className="m-2 h-100 w-20 bg-success text-black rounded"
@@ -102,15 +108,17 @@ export default function Card(props) {
               onClick={handleClick}
               onChange={handleOptions}
             >
-              {priceOptions.map((i) => (
-                <option key={i} value={i}>
-                  {i}
-                </option>
-              ))}
+              {priceOptions.map((i) => {
+                return (
+                  <option key={i} value={i}>
+                    {i}
+                  </option>
+                );
+              })}
             </select>
             <div className="d-inline ms-2 h-100 w-20 fs-5">₹{finalPrice}/-</div>
           </div>
-          <hr />
+          <hr></hr>
           <button
             className="btn btn-success justify-center ms-2"
             onClick={handleAddToCart}

@@ -4,15 +4,13 @@ import Carousel from "../components/Carousel";
 import Footer from "../components/Footer";
 import Navbar from "../components/Navbar";
 
-
 export default function Home() {
-  
   const [foodCat, setFoodCat] = useState([]);
   const [foodItems, setFoodItems] = useState([]);
   const [search, setSearch] = useState("");
 
   const loadFoodItems = async () => {
-    let response = await fetch("http://localhost:5000/api/foodData", {
+    let response = await fetch("http://localhost:5000/api/auth/foodData", {
       // credentials: 'include',
       // Origin:"http://localhost:3000/login",
       method: "POST",
@@ -67,7 +65,12 @@ export default function Home() {
                             key={filterItems.id}
                             className="col-12 col-md-6 col-lg-3"
                           >
-                            <Card></Card>
+                            <Card
+                              foodName={filterItems.name}
+                              item={filterItems}
+                              options={filterItems.options[0]}
+                              ImgSrc={filterItems.img}
+                            ></Card>
                           </div>
                         );
                       })
