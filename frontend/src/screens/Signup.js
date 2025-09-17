@@ -37,7 +37,7 @@ export default function Signup() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const response = await fetch("https://foodymoody-backend.onrender.com/api/auth/createuser", {
+    const response = await fetch("https://foodymoody-80jc.onrender.com/api/auth/createuser", {
       // credentials: 'include',
       // Origin:"http://localhost:3000/login",
       method: 'POST',
